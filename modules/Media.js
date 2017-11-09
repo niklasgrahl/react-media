@@ -17,11 +17,13 @@ class Media extends React.Component {
     children: PropTypes.oneOfType([
       PropTypes.node,
       PropTypes.func
-    ])
+    ]),
+    waitUntilMounted: PropTypes.bool
   }
 
   static defaultProps = {
-    defaultMatches: true
+    defaultMatches: true,
+    waitUntilMounted: false
   }
 
   state = {
@@ -32,6 +34,18 @@ class Media extends React.Component {
     this.setState({ matches: this.mediaQueryList.matches })
 
   componentWillMount() {
+    if (!this.props.waitUntilMounted) {
+      this.init()
+    }
+  }
+
+  componentDidMount() {
+    if (this.props.waitUntilMounted) {
+      this.init()
+    }
+  }
+
+  init() {
     if (typeof window !== 'object')
       return
 
